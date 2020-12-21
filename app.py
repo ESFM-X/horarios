@@ -4,8 +4,9 @@ import dash_html_components as html
 import plotly.express as px
 from dash.dependencies import Input, Output
 import pandas as pd
+import dash_bootstrap_components as dbc
 
-external_stylesheets = ['https://codepen.io/amyoshino/pen/jzXypZ.css']
+external_stylesheets = [dbc.themes.BOOTSTRAP]
 
 df  = pd.read_csv('Cleande_df_correos.csv')
 app = dash.Dash(__name__, external_stylesheets = external_stylesheets)
