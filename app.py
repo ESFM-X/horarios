@@ -15,7 +15,7 @@ first = [{'label': '-','value':'all'}]
 group_dict = [{'label': group,'value':group} for group in df['Grupo'].unique()]
 group_dict = first + group_dict
 app.title = 'ESFM | Horario'
-loc_list = [1,2,3,6,7,8,9,10,12,14]
+loc_list = [1,2,3,6,7,8,9,10,14]
 colors = {
     'text': '#1866B9',
     'background': '#FFFFFF'
