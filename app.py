@@ -15,7 +15,7 @@ first = [{'label': '-','value':'all'}]
 group_dict = [{'label': group,'value':group} for group in df['Grupo'].unique()]
 group_dict = first + group_dict
 app.title = 'ESFM | Horario'
-loc_list = [1,2,3,6,7,8,9,10,14]
+loc_list = [1,2,3,6,7,8,9,10,12,14]
 colors = {
     'text': '#1866B9',
     'background': '#FFFFFF'
@@ -29,19 +29,19 @@ style_subtitles= {
 }
 style_bar = {  
     'border-top-style': 'double',
-    'border-top-color': '#79003E',#'#1866B9',
-    'width': 900,
+    'border-top-color': '#7b1448',#'#1866B9',
+    'width': '80%',
     'margin-left': 'auto',
     'margin-right': 'auto'
 }
 app.layout = html.Div( children = [
     html.Header(
         children = [html.Img (src="https://fotos.subefotos.com/076df224d0bb0b75749aa140d0c955afo.png", 
-                    style = {"margin-bottom":0,'min-width':350, "display":"block","width": '55%', "height": "auto", "margin-left": "auto", "margin-right": "auto", "margin-top": 1,"margin-bottom": 0,"text-align":"center", 'padding-top':10}),
-                    html.H2('Información de horarios ', style={'font-size':"2.2rem",'margin-bottom':0, 'margin-top':3}),html.P(children = 'Página no oficial del IPN', style = {'color':'#959595'}), html.Br()],
+                    style = {"margin-bottom":0,'min-width':350, "display":"block","width": '55%', "height": "auto", "margin-left": "auto", "margin-right": "auto", "margin-top": 1,"margin-bottom": 0,"text-align":"center", 'padding-top':30}),
+                    html.H2('Información de horarios ', style={'font-size':"2.2rem",'margin-bottom':0, 'margin-top':10}),html.P(children = 'Página no oficial del IPN', style = {'color':'#959595'}), html.Br()],
         style= {
            # 'backgroundColor': '#79003E',#colors['text'],#colors['background'],
-            'color': '#79003E',#'#FFFFFF',#colors['text'],
+            'color': '#7b1448',#'#FFFFFF',#colors['text'],
             'margin-top':0,
             'margin-bottom':0,
             'margin-left':'auto',
@@ -59,7 +59,15 @@ app.layout = html.Div( children = [
     #         ''
     #         }
     # ),
+      html.P('Existen grupos con asignaturas repetidas y horarios diferentes, ESFM lo aclarará pronto. ', style = {
+                                                                                        'margin-left':100,
+                                                                                        'margin-right':'auto',
+                                                                                        'width': "80%",
+                                                                                        'margin-right':100,
+                                                                                        'font-size':'0.8rem'}
+          ),
     html.H3(children = 'Filtrar por grupo', style = style_subtitles),
+  
     html.Div('', style = style_bar),
     html.Div(children = [
         html.Div(
@@ -75,7 +83,7 @@ app.layout = html.Div( children = [
                                                     clearable = False),
             style = {
                 'margin':40,
-                'width': 200,
+                'width': "40%",
                 'margin-bottom':10,
                 'margin-top': 20,
                 'margin-right':10
@@ -107,7 +115,7 @@ app.layout = html.Div( children = [
                                             'margin-left':'auto',
                                             'margin-right':'auto',
                                             'margin-bottom':40,
-                                            'width': "90%",
+                                            'width': "80%",
                                             'height':'auto'
                                            }
     ),
@@ -141,7 +149,7 @@ app.layout = html.Div( children = [
                                                 clearable = False),
         style = {
             'margin':40,
-            'width': 450,
+            'width': "40%",
             'margin-top':20,
             'margin-bottom':20,
             'margin-left':"auto",
@@ -150,7 +158,7 @@ app.layout = html.Div( children = [
         className = 'six columns'
     
     )
-    ], className = 'row', style = {'width': 800, 'margin-left':'auto', 'margin-right':'auto'}),
+    ], className = 'row', style = {'width': "100%", 'margin-left':'auto', 'margin-right':'auto'}),
 
     html.Table(id = 'second_table',style = {
                                             'textAlign': 'center',
@@ -159,7 +167,7 @@ app.layout = html.Div( children = [
                                             'margin-left':'auto',
                                             'margin-right':'auto',
                                             'margin-bottom':40,
-                                            'width': "90%",
+                                            'width': "80%",
                                             'height':'auto'
                                            }
     ),
@@ -194,7 +202,7 @@ app.layout = html.Div( children = [
                                                     clearable = True),
             style = {
                 'margin':40,
-                'width': 500,
+                'width': "60%",
                 'margin-top':20,
                 'margin-bottom':20,
                 'margin-left':"auto",
@@ -203,7 +211,7 @@ app.layout = html.Div( children = [
             className = 'two columns'
         
         )
-    ], className = 'row', style = {'width': 800, 'margin-left':'auto', 'margin-right':'auto'}),
+    ], className = 'row', style = {'width': "100%", 'margin-left':'auto', 'margin-right':'auto'}),
 
     html.Table(id = 'third_table',style = {
                                             'textAlign': 'center',
@@ -212,13 +220,13 @@ app.layout = html.Div( children = [
                                             'margin-left':'auto',
                                             'margin-right':'auto',
                                             'margin-bottom':40,
-                                            'width': "90%",
+                                            'width': "80%",
                                             'height':'auto'
                                            }
     ),
 
     html.Footer(children= [
-                                         html.Div(children = ['Hecho con 🧡 por el CdP ESFM. '
+                                         html.Div(children = ['Hecho con ❤ por el CdP ESFM. '
                                                                  ], 
                                                 style = {
                                                     'textAlign': 'center',
@@ -229,7 +237,7 @@ app.layout = html.Div( children = [
                                          ),
                                          html.Div(children= ['Datos obtenidos de ', html.A('Mis Profesores',href = 'https://www.misprofesores.com/escuelas/ESFM-IPN_1691'),
                                                                                             ' y ', 
-                                                                                            html.A('ESFM',href = 'https://www.esfm.ipn.mx/assets/files/esfm/docs/HORARIOS.pdf'),
+                                                                                            html.A('ESFM',href = 'https://www.esfm.ipn.mx'),
                                                                                             '. '],
                                                   style = {
                                                     'textAlign': 'center',
@@ -242,7 +250,7 @@ app.layout = html.Div( children = [
      
                             ],
                                 style={
-                                        'width': 777,
+                                        'width': "90%",
                                         #'border-top-style': 'double',
                                         #'border-top-color': '#1866B9',
                                         'margin-left': 'auto',
@@ -301,7 +309,7 @@ def generate_table(semestre,carrera, dataframe = df, max_rows = 100):
 
                 html.Tbody([html.Tr([
                         html.Td(dataframe.iloc[i][col]) for col in dataframe.columns
-                    ], style = {'height':30}) for i in range(min(len(dataframe), max_rows))
+                    ], style = {'height':40}) for i in range(min(len(dataframe), max_rows))
                 ], style = {'color':'#414242' , 'width': 200})
 
             ]
@@ -318,7 +326,7 @@ def generate_2table(materia,carrera, dataframe = df, max_rows = 100):
 
                 html.Tbody([html.Tr([
                         html.Td(dataframe.iloc[i][col]) for col in dataframe.columns
-                    ], style = {'height':30}) for i in range(min(len(dataframe), max_rows))
+                    ], style = {'height':40}) for i in range(min(len(dataframe), max_rows))
                 ], style = {'color':'#414242' })
 
             ]
@@ -352,7 +360,7 @@ def generate_3table(materia_grupo,carrera, dataframe = df, max_rows = 100):
 
                 html.Tbody([html.Tr([
                         html.Td(dataframe.iloc[i][col]) for col in dataframe.columns
-                    ], style = {'height':30}) for i in range(min(len(dataframe), max_rows))
+                    ], style = {'height':40}) for i in range(min(len(dataframe), max_rows))
                 ], style = {'color':'#414242' })
 
             ]
