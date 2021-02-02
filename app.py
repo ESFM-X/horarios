@@ -15,7 +15,7 @@ first = [{'label': '-','value':'all'}]
 group_dict = [{'label': group,'value':group} for group in df['Grupo'].unique()]
 group_dict = first + group_dict
 app.title = 'ESFM | Horario'
-loc_list = [1,2,3,6,7,8,9,10,13]
+loc_list = [1,2,3,6,7,8,9,10,12,14]
 colors = {
     'text': '#1866B9',
     'background': '#FFFFFF'
@@ -36,7 +36,9 @@ style_bar = {
 }
 app.layout = html.Div( children = [
     html.Header(
-        children = [html.Br(),html.H1('Información de horarios - ESFM', style={'margin-bottom':0}),html.P(children = 'Página no oficial del IPN', style = {'color':'#959595'}), html.Br()],
+        children = [html.Img (src="https://fotos.subefotos.com/076df224d0bb0b75749aa140d0c955afo.png", 
+                    style = {"margin-bottom":0,'min-width':350, "display":"block","width": '55%', "height": "auto", "margin-left": "auto", "margin-right": "auto", "margin-top": 1,"margin-bottom": 0,"text-align":"center", 'padding-top':10}),
+                    html.H2('Información de horarios ', style={'font-size':"2.2rem",'margin-bottom':0, 'margin-top':3}),html.P(children = 'Página no oficial del IPN', style = {'color':'#959595'}), html.Br()],
         style= {
            # 'backgroundColor': '#79003E',#colors['text'],#colors['background'],
             'color': '#79003E',#'#FFFFFF',#colors['text'],
@@ -46,7 +48,7 @@ app.layout = html.Div( children = [
             'margin-right':'auto',
             'text-align':'center',
             'margin-left':0,
-            'height':130
+            'height':"30%"
             #'width':730
         }
     ),
@@ -216,11 +218,8 @@ app.layout = html.Div( children = [
     ),
 
     html.Footer(children= [
-                                         html.Div(children = ['Hecho por Julio César Hernández -  ',
-                                                                html.A('GitHub',href = 'https://github.com/JoulesCH'),
-                                                                ' - ',
-                                                                html.A('LinkedIn',href = 'https://www.linkedin.com/in/julio-césar-hernández-b426a1161/') ,'.' 
-                                                        ], 
+                                         html.Div(children = ['Hecho con 🧡 por el CdP ESFM. '
+                                                                 ], 
                                                 style = {
                                                     'textAlign': 'center',
                                                     'margin': 10,
