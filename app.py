@@ -8,14 +8,14 @@ import dash_bootstrap_components as dbc
 
 external_stylesheets = [dbc.themes.BOOTSTRAP]
 
-df  = pd.read_csv('Cleande_df_correos.csv')
+df  = pd.read_csv('2021-2.csv')
 app = dash.Dash(__name__, external_stylesheets = external_stylesheets)
 server = app.server
 first = [{'label': '-','value':'all'}]
 group_dict = [{'label': group,'value':group} for group in df['Grupo'].unique()]
 group_dict = first + group_dict
 app.title = 'ESFM | Horario'
-loc_list = [1,2,4,6,7,8,9,10,11,17,18]
+loc_list = [1,2,3,6,7,8,9,10,13]
 colors = {
     'text': '#1866B9',
     'background': '#FFFFFF'
@@ -64,7 +64,9 @@ app.layout = html.Div( children = [
             children = dcc.Dropdown(id = 'Carrera', options = [{'label':'Ingeniería Matemática',
                                                                 'value':'LIM'},
                                                                 {'label':'Física y Matemáticas',
-                                                                'value':'LFM'}
+                                                                'value':'LFM'},
+                                                                {'label':'Matemática Algorítmica',
+                                                                'value':'LMA'}
                                                                 ],
                                                     value = 'LIM',
                                                     searchable = False,
@@ -103,7 +105,7 @@ app.layout = html.Div( children = [
                                             'margin-left':'auto',
                                             'margin-right':'auto',
                                             'margin-bottom':40,
-                                            'width': 250,
+                                            'width': "90%",
                                             'height':'auto'
                                            }
     ),
@@ -111,25 +113,25 @@ app.layout = html.Div( children = [
     html.H3(children = 'Filtrar por materia', style = style_subtitles),
     html.Div('', style = style_bar),
     html.Div(children=[
-    html.Div(
-        children = dcc.Dropdown(id = 'Carrera_2', options = [{'label':'Ingeniería Matemática',
-                                                            'value':'LIM'},
-                                                            {'label':'Física y Matemáticas',
-                                                            'value':'LFM'}
-                                                            ],
-                                                value = 'LIM',
-                                                searchable = False,
-                                                clearable = False),
-        style = {
-            'margin':40,
-            'width': 200,
-            'margin-bottom':10,
-            'margin-top': 20,
-            'margin-right':10
-        },
-        className = 'six columns'
+    # html.Div(
+    #     children = dcc.Dropdown(id = 'Carrera_2', options = [{'label':'Ingeniería Matemática',
+    #                                                         'value':'LIM'},
+    #                                                         {'label':'Física y Matemáticas',
+    #                                                         'value':'LFM'}
+    #                                                         ],
+    #                                             value = 'LIM',
+    #                                             searchable = False,
+    #                                             clearable = False),
+    #     style = {
+    #         'margin':40,
+    #         'width': 200,
+    #         'margin-bottom':10,
+    #         'margin-top': 20,
+    #         'margin-right':10
+    #     },
+    #     className = 'six columns'
     
-    ),
+    # ),
     html.Div(
         children = dcc.Dropdown(id = 'Materia', #options = group_dict,
                                                 value = '1MV2',
@@ -140,7 +142,8 @@ app.layout = html.Div( children = [
             'width': 450,
             'margin-top':20,
             'margin-bottom':20,
-            'margin-left':0
+            'margin-left':"auto",
+            'margin-right':"auto"
         },
         className = 'six columns'
     
@@ -154,7 +157,7 @@ app.layout = html.Div( children = [
                                             'margin-left':'auto',
                                             'margin-right':'auto',
                                             'margin-bottom':40,
-                                            'width':  250,
+                                            'width': "90%",
                                             'height':'auto'
                                            }
     ),
@@ -162,25 +165,25 @@ app.layout = html.Div( children = [
     html.H3(children = 'Organizar horario', style = style_subtitles),
     html.Div('', style = style_bar),
     html.Div(children = [
-        html.Div(
-            children = dcc.Dropdown(id = 'Carrera_3', options = [{'label':'Ingeniería Matemática',
-                                                                'value':'LIM'},
-                                                                {'label':'Física y Matemáticas',
-                                                                'value':'LFM'}
-                                                                ],
-                                                    value = 'LIM',
-                                                    searchable = False,
-                                                    clearable = False),
-            style = {
-                'margin':40,
-                'width': 200,
-                'margin-bottom':10,
-                'margin-top': 20,
-                'margin-right':10
-            },
-            className = 'two columns'
+        #html.Div(
+        #    children = dcc.Dropdown(id = 'Carrera_3', options = [{'label':'Ingeniería Matemática',
+        #                                                        'value':'LIM'},
+         #                                                       {'label':'Física y Matemáticas',
+         #                                                       'value':'LFM'}
+         #                                                       ],
+         #                                           value = 'LIM',
+         #                                           searchable = False,
+         #                                           clearable = False),
+        #     style = {
+        #         'margin':40,
+        #         'width': 200,
+        #         'margin-bottom':10,
+        #         'margin-top': 20,
+        #         'margin-right':10
+        #     },
+        #     className = 'two columns'
         
-        ),
+        # ),
         html.Div(
             children = dcc.Dropdown(id = 'Materia_y_grupo', #options = group_dict,
                                                     value = ['1MV2','0'],
@@ -192,7 +195,8 @@ app.layout = html.Div( children = [
                 'width': 500,
                 'margin-top':20,
                 'margin-bottom':20,
-                'margin-left':0,
+                'margin-left':"auto",
+                'margin-right':"auto"
             },
             className = 'two columns'
         
@@ -206,7 +210,7 @@ app.layout = html.Div( children = [
                                             'margin-left':'auto',
                                             'margin-right':'auto',
                                             'margin-bottom':40,
-                                            'width':  250,
+                                            'width': "90%",
                                             'height':'auto'
                                            }
     ),
@@ -259,27 +263,27 @@ app.layout = html.Div( children = [
 def set_dict(carrera):
     global group_dict
     first = [{'label': '-','value':'all'}]
-    group_dict = [{'label': group,'value':group} for group in df[df['Programa']== carrera]['Grupo'].unique()]
+    group_dict = [{'label': group,'value':group} for group in df[df["Programa"] == carrera]['Grupo'].unique()]
     group_dict = first + group_dict
     return group_dict
 
-@app.callback(Output('Materia','options'),[Input('Carrera_2','value')])
+@app.callback(Output('Materia','options'),[Input('Carrera','value')])
 def set_2dict(carrera):
     global group_dict
     first = [{'label': '-','value':'all'}]
-    group_dict = [{'label': materia,'value':materia} for materia in df[df['Programa']== carrera]['Unidad de aprendizaje'].unique()]
+    group_dict = [{'label': materia,'value':materia} for materia in df[df["Programa"] == carrera]['Asignatura'].unique()]
     group_dict = first + group_dict
     return group_dict
 
-@app.callback(Output('Materia_y_grupo','options'),[Input('Carrera_3','value')])
+@app.callback(Output('Materia_y_grupo','options'),[Input('Carrera','value')])
 def set_3dict(carrera):
     group_dict = []
-    df2 = df[df['Programa'] == carrera]
+    df2 = df[df["Programa"] == carrera]
     df3 = df2.reset_index()
     first = [{'label': '-','value':'all'}]
     for ind in range(df3.shape[0]):
         grupo = df3.loc[ind,'Grupo']
-        materia = df3.loc[ind,'Unidad de aprendizaje']
+        materia = df3.loc[ind,'Asignatura']
         group_dict.append( {'label': materia +' '+ grupo,'value':materia+'*'+grupo})
     group_dict = first + group_dict
     return group_dict
@@ -288,41 +292,41 @@ def set_3dict(carrera):
 def generate_table(semestre,carrera, dataframe = df, max_rows = 100):
     if semestre:
         if semestre != 'all':
-            dataframe = dataframe[(dataframe['Programa']==carrera) & (dataframe['Grupo'] == semestre)]
+            dataframe = dataframe[(dataframe["Programa"] == carrera) & (dataframe['Grupo'] == semestre)]
         else:
-            dataframe = dataframe[(dataframe['Programa']==carrera)]
-        dataframe = dataframe.drop('Unnamed: 0',axis = 1).iloc[:,loc_list].rename(columns={'Semestre':'Sem','Calificacion':'Cal'})
+            dataframe = dataframe
+        dataframe = dataframe.iloc[:,loc_list]
         return [ html.Thead(
                     html.Tr([html.Th(col) for col in dataframe.columns])
                 ),
 
                 html.Tbody([html.Tr([
                         html.Td(dataframe.iloc[i][col]) for col in dataframe.columns
-                    ]) for i in range(min(len(dataframe), max_rows))
+                    ], style = {'height':30}) for i in range(min(len(dataframe), max_rows))
                 ], style = {'color':'#414242' , 'width': 200})
 
             ]
 
-@app.callback(Output('second_table','children'),[Input('Materia','value'),Input('Carrera_2','value')])
+@app.callback(Output('second_table','children'),[Input('Materia','value'),Input('Carrera','value')])
 def generate_2table(materia,carrera, dataframe = df, max_rows = 100):
     if materia:
-        dataframe = dataframe[(dataframe['Programa']==carrera) & (dataframe['Unidad de aprendizaje']==materia)]
+        dataframe = dataframe[(dataframe["Programa"] == carrera) & (dataframe['Asignatura']==materia)]
 
-        dataframe = dataframe.drop('Unnamed: 0',axis = 1).iloc[:,loc_list].rename(columns={'Semestre':'Sem','Calificacion':'Cal'})
+        dataframe = dataframe.iloc[:,loc_list]
         return [ html.Thead(
                     html.Tr([html.Th(col) for col in dataframe.columns])
                 ),
 
                 html.Tbody([html.Tr([
                         html.Td(dataframe.iloc[i][col]) for col in dataframe.columns
-                    ]) for i in range(min(len(dataframe), max_rows))
+                    ], style = {'height':30}) for i in range(min(len(dataframe), max_rows))
                 ], style = {'color':'#414242' })
 
             ]
 
-@app.callback(Output('third_table','children'),[Input('Materia_y_grupo','value'),Input('Carrera_3','value')])
+@app.callback(Output('third_table','children'),[Input('Materia_y_grupo','value'),Input('Carrera','value')])
 def generate_3table(materia_grupo,carrera, dataframe = df, max_rows = 100):
-    dataframe = df
+    dataframe = df[dataframe["Programa"] == carrera]
     new_df = pd.DataFrame()
     for materia_g in materia_grupo:
         materia = materia_g.split('*')[0]
@@ -331,13 +335,13 @@ def generate_3table(materia_grupo,carrera, dataframe = df, max_rows = 100):
         except:
             grupo = ''
 
-        new_df = pd.concat([  new_df, df[ (df['Unidad de aprendizaje']== materia) & (df['Programa']== carrera) & (df['Grupo']== grupo)]  ])
+        new_df = pd.concat([  new_df, df[(df["Programa"] == carrera) &  (df['Asignatura']== materia) & (df['Grupo']== grupo)]  ])
     
     dataframe = new_df
     try:
-        dataframe = dataframe.drop('Unnamed: 0',axis = 1).iloc[:,loc_list].rename(columns={'Semestre':'Sem','Calificacion':'Cal'})
+        dataframe = dataframe.iloc[:,loc_list]
     except:
-        dataframe = df[df['Unidad de aprendizaje'] == ''].drop('Unnamed: 0',axis = 1).iloc[:,loc_list].rename(columns={'Semestre':'Sem','Calificacion':'Cal'})
+        dataframe = df[df['Asignatura'] == '']
     if True:
         
     #     dataframe = dataframe[(dataframe['Programa']==carrera) & (dataframe['Unidad de aprendizaje']==materia)]
@@ -349,7 +353,7 @@ def generate_3table(materia_grupo,carrera, dataframe = df, max_rows = 100):
 
                 html.Tbody([html.Tr([
                         html.Td(dataframe.iloc[i][col]) for col in dataframe.columns
-                    ]) for i in range(min(len(dataframe), max_rows))
+                    ], style = {'height':30}) for i in range(min(len(dataframe), max_rows))
                 ], style = {'color':'#414242' })
 
             ]
