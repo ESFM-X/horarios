@@ -17,7 +17,7 @@ cred = credentials.Certificate("./horario-f7ff5-firebase-adminsdk-xebih-c86b730d
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
-df  = pd.read_csv('2021-2.csv')
+df  = pd.read_csv('2021-3.csv')
 app = dash.Dash(__name__, external_stylesheets = external_stylesheets,suppress_callback_exceptions=True)
 server = app.server
 first = [{'label': '-','value':'all'}]
@@ -68,13 +68,13 @@ app.layout = html.Div( children = [
     #         ''
     #         }
     # ),
-     # html.P('Existen grupos con asignaturas repetidas y horarios diferentes, ESFM lo aclarará pronto. ', style = {
-     #                                                                                   'margin-left':100,
-     #                                                                                   'margin-right':'auto',
-     #                                                                                   'width': "80%",
-     #                                                                                   'margin-right':100,
-     #                                                                                   'font-size':'0.8rem'}
-    #      ),
+    html.P('ESFM ha estado modificando los horarios, revisa si hay algún cambio en el tuyo.', style = {
+                                                                                       'margin-left':100,
+                                                                                       'margin-right':'auto',
+                                                                                       'width': "80%",
+                                                                                        'margin-right':100,
+                                                                                        'font-size':'0.8rem'}
+          ),
     html.H3(children = 'Filtrar por grupo', style = style_subtitles),
   
     html.Div('', style = style_bar),
