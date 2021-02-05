@@ -31,7 +31,7 @@ colors = {
 }
 
 style_subtitles= {
-    'margin-left':100,
+    'margin-left':"5%",
     'margin-right':'auto',
     'width': 300
 
@@ -39,7 +39,7 @@ style_subtitles= {
 style_bar = {  
     'border-top-style': 'double',
     'border-top-color': '#7b1448',#'#1866B9',
-    'width': '80%',
+    'width': '90%',
     'margin-left': 'auto',
     'margin-right': 'auto'
 }
@@ -120,16 +120,26 @@ app.layout = html.Div( children = [
 
     html.Table(id = 'First_table',style = {
                                             'textAlign': 'center',
+                                            #'margin':80,
+                                            #'margin-top':10,
+                                            'margin-left':'auto',
+                                            'margin-right':'auto',
+                                            #'margin-bottom':40,
+                                            'width': "80%",
+                                            'height':'auto'
+                                           }
+    ),
+    html.Div(id = 'First_table2', style = {
+                                            'textAlign': 'center',
                                             'margin':80,
                                             'margin-top':10,
                                             'margin-left':'auto',
                                             'margin-right':'auto',
                                             'margin-bottom':40,
-                                            'width': "80%",
-                                            'height':'auto'
-                                           }
-    ),
-   
+                                            'width': "90%",
+                                            'height':'auto',
+                                            'font-size': '0.8rem'
+                                           }),
     html.H3(children = 'Filtrar por materia', style = style_subtitles),
     html.Div('', style = style_bar),
     html.Div(children=[
@@ -173,16 +183,26 @@ app.layout = html.Div( children = [
 
     html.Table(id = 'second_table',style = {
                                             'textAlign': 'center',
+                                            #'margin':80,
+                                            #'margin-top':10,
+                                            'margin-left':'auto',
+                                            'margin-right':'auto',
+                                            #'margin-bottom':40,
+                                            'width': "80%",
+                                            'height':'auto'
+                                           }
+    ),
+    html.Div(id = 'second_table2', style = {
+                                            'textAlign': 'center',
                                             'margin':80,
                                             'margin-top':10,
                                             'margin-left':'auto',
                                             'margin-right':'auto',
                                             'margin-bottom':40,
-                                            'width': "80%",
-                                            'height':'auto'
-                                           }
-    ),
-    
+                                            'width': "90%",
+                                            'height':'auto',
+                                            'font-size': '0.8rem'
+                                           }),
     html.H3(children = 'Organizar horario', style = style_subtitles),
     html.Div('', style = style_bar),
     html.Div(children = [
@@ -227,20 +247,32 @@ app.layout = html.Div( children = [
         ),
         
     ], className = 'row', style = {'width': "100%", 'margin-left':'auto', 'margin-right':'auto'}),
-    html.Div(id = "traslapes", style = {'margin-bottom':10, 'padding-bottom':10}),
+    html.Div(id = "traslapes", style = {'margin-bottom':10, 'padding-bottom':1}),
     html.Table(id = 'third_table',style = {
+                                            'textAlign': 'center',
+                                            #'margin':80,
+                                            #'margin-top':10,
+                                            'margin-left':'auto',
+                                            'margin-right':'auto',
+                                            #'margin-bottom':40,
+                                            'width': "80%",
+                                            'height':'auto'
+                                           }
+    ),
+    html.Div(id = 'table-prueba', style = {
                                             'textAlign': 'center',
                                             'margin':80,
                                             'margin-top':10,
                                             'margin-left':'auto',
                                             'margin-right':'auto',
-                                            'margin-bottom':40,
-                                            'width': "80%",
-                                            'height':'auto'
-                                           }
-    ),
-    html.P("(Beta) Organiza tu horario y después genera un ID.", style ={'text-align':'center', 'margin-bottom':1}),
-    html.P("Podrás recuperar tu horario y hacer cambios con el mismo ID.", style ={'text-align':'center'}),
+                                            'margin-bottom':20,
+                                            'width': "90%",
+                                            'height':'auto',
+                                            'font-size': '0.8rem'
+                                           }),
+   
+    html.P("Organiza tu horario y después genera un ID.", style ={'text-align':'center', 'margin-bottom':1, 'font-size':'0.8rem'}),
+    html.P("Podrás recuperar tu horario y hacer cambios con el mismo ID.", style ={'text-align':'center', 'font-size':'0.8rem'}),
     
 
     #html.P("(Beta) El ID te permite recordar tu selección de horario.", style ={'text-align':'center'}),
@@ -443,7 +475,7 @@ def set_3dict(carrera):
     group_dict = first + group_dict
     return group_dict
 
-@app.callback(Output('First_table','children'), [Input('Semestre','value'),Input('Carrera','value')])
+@app.callback([Output('First_table','children'), Output('First_table2', 'children')], [Input('Semestre','value'),Input('Carrera','value')])
 def generate_table(semestre,carrera, dataframe = df, max_rows = 100):
     if semestre:
         if semestre != 'all':
@@ -451,36 +483,39 @@ def generate_table(semestre,carrera, dataframe = df, max_rows = 100):
         else:
             dataframe = dataframe
         dataframe = dataframe.iloc[:,loc_list]
-        return [ html.Thead(
-                    html.Tr([html.Th(col) for col in dataframe.columns])
-                ),
+        return [[None], 
+            # html.Thead(
+            #         html.Tr([html.Th(col) for col in dataframe.columns])
+            #     ),
 
-                html.Tbody([html.Tr([
-                        html.Td(dataframe.iloc[i][col]) for col in dataframe.columns
-                    ], style = {'height':40}) for i in range(min(len(dataframe), max_rows))
-                ], style = {'color':'#414242' , 'width': 200})
-
+            #     html.Tbody([html.Tr([
+            #             html.Td(dataframe.iloc[i][col]) for col in dataframe.columns
+            #         ], style = {'height':40}) for i in range(min(len(dataframe), max_rows))
+            #     ], style = {'color':'#414242' , 'width': 200})
+            [dbc.Table.from_dataframe(dataframe,responsive = True, striped = True, hover = True)]
             ]
 
-@app.callback(Output('second_table','children'),[Input('Materia','value'),Input('Carrera','value')])
+@app.callback([Output('second_table','children'), Output('second_table2', 'children')],[Input('Materia','value'),Input('Carrera','value')])
 def generate_2table(materia,carrera, dataframe = df, max_rows = 100):
     if materia:
         dataframe = dataframe[(dataframe["Programa"] == carrera) & (dataframe['Asignatura']==materia)]
 
         dataframe = dataframe.iloc[:,loc_list]
-        return [ html.Thead(
-                    html.Tr([html.Th(col) for col in dataframe.columns])
-                ),
+        return [ [None,
+            # [ html.Thead(
+            #         html.Tr([html.Th(col) for col in dataframe.columns])
+            #     ),
 
-                html.Tbody([html.Tr([
-                        html.Td(dataframe.iloc[i][col]) for col in dataframe.columns
-                    ], style = {'height':40}) for i in range(min(len(dataframe), max_rows))
-                ], style = {'color':'#414242' })
+            #     html.Tbody([html.Tr([
+            #             html.Td(dataframe.iloc[i][col]) for col in dataframe.columns
+            #         ], style = {'height':40}) for i in range(min(len(dataframe), max_rows))
+            #     ], style = {'color':'#414242' })
 
-            ]
+            ], [dbc.Table.from_dataframe(dataframe,responsive = True, striped = True, hover = True)] ]
 
-@app.callback([Output('third_table','children'),Output('traslapes','children')],[Input('Materia_y_grupo','value'),Input('Carrera','value')])
+@app.callback([Output('third_table','children'),Output('traslapes','children'), Output('table-prueba', 'children')],[Input('Materia_y_grupo','value'),Input('Carrera','value')])
 def generate_3table(materia_grupo,carrera, dataframe = df, max_rows = 100):
+    
     dataframe = df[dataframe["Programa"] == carrera]
     new_df = pd.DataFrame()
     for materia_g in materia_grupo:
@@ -493,26 +528,31 @@ def generate_3table(materia_grupo,carrera, dataframe = df, max_rows = 100):
         new_df = pd.concat([  new_df, df[(df["Programa"] == carrera) &  (df['Asignatura']== materia) & (df['Grupo']== grupo)]  ])
     
     dataframe = new_df
+    
     try:
         dataframe = dataframe.iloc[:,loc_list]
     except:
         dataframe = df[df['Asignatura'] == '']
+    
     if True:
         
     #     dataframe = dataframe[(dataframe['Programa']==carrera) & (dataframe['Unidad de aprendizaje']==materia)]
 
     #     dataframe = dataframe.drop('Unnamed: 0',axis = 1).iloc[:,[0,1,3,5,6,7,8,9,10,16]]
         diccionario_traslapes = traslape(dataframe.loc[:,['Lun', 'Mar','Mie', 'Jue', 'Vie']].to_dict())
-        return [[ html.Thead(
-                    html.Tr([html.Th(col) for col in dataframe.columns])
-                ),
+        if materia_grupo == []:
+            dataframe = pd.DataFrame(columns = ["Grupo", 'Asignatura', 'Profesor', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Calificación', 'Correo'])
+        return [[None 
+            # html.Thead(
+            #         html.Tr([html.Th(col) for col in dataframe.columns])
+            #     ),
 
-                html.Tbody([html.Tr([
-                        html.Td(dataframe.iloc[i][col]) for col in dataframe.columns
-                    ], style = {'height':40}) for i in range(min(len(dataframe), max_rows))
-                ], style = {'color':'#414242' })
+            #     html.Tbody([html.Tr([
+            #             html.Td(dataframe.iloc[i][col]) for col in dataframe.columns
+            #         ], style = {'height':40}) for i in range(min(len(dataframe), max_rows))
+            #     ], style = {'color':'#414242' })
 
-            ], [dbc.FormText( texto , style ={'text-align':'center','margin-bottom':1,'margin-top':1, 'font-size':"0.9rem", "color":"red"}) for texto in diccionario_traslapes.values()] ]
+            ], [dbc.FormText( texto , style ={'text-align':'center','margin-bottom':1,'margin-top':1, 'font-size':"0.9rem", "color":"red"}) for texto in diccionario_traslapes.values()],   [dbc.Table.from_dataframe(dataframe,responsive = True, striped = True, hover = True)]]
 
 if __name__ == '__main__':
     app.run_server(debug = True)
