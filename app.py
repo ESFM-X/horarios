@@ -17,7 +17,7 @@ cred = credentials.Certificate("./horario-f7ff5-firebase-adminsdk-xebih-c86b730d
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
-df  = pd.read_csv('2021-3.csv')
+df  = pd.read_csv('2021-4.csv')
 app = dash.Dash(__name__, external_stylesheets = external_stylesheets,suppress_callback_exceptions=True)
 server = app.server
 first = [{'label': '-','value':'all'}]
@@ -331,40 +331,65 @@ app.layout = html.Div( children = [
 ],style={'margin-top':0}
 )
 
-def traslape(a_dic):
-    dias_dic = {'Lun':'lunes', 'Mar':'martes', 'Mie':'miércoles', 'Jue':'jueves','Vie':'viernes'}
-    def intervalo_maker(x):
-        x = str(x)
-        if len(x) > 8:
-            x1,x2 = x.split('-')
+def traslapesd(dfdic2, materias):
+    def limpiador(dic):
+        """
+        @Rudolph
+        Recibe un diccionario con los horarios de las asignaturas de cada día 
+        """
+        llaves = dic.keys()
+        horasini=[]
+        horasfin=[]
+        traslape = []
+        bandera=2
+        for llave in llaves:
+            if dic[llave] != '\xa0':
+                inicio,final = dic[llave].split("-")
+                hinicio,hfinal = float(inicio.split(":")[0]),float(final.split(":")[0])
+                minicio,mfinal = float(inicio.split(":")[1])/60,float(final.split(":")[1])/60
+                horasini.append([hinicio+minicio,hfinal+mfinal])
+            else:
+                horasini.append([])
+        return horasini
+    
+    dias = ['Lun','Mar','Mie','Jue','Vie']
+    dias2 = {llave: dia.lower() for llave,dia in zip(['Lun','Mar','Mie','Jue','Vie'], ['Lunes','Martes','Miércoles','Jueves','Viernes'])}
+    
+    dictionary = {dias2[llave]: limpiador(dfdic2[llave]) for llave in dias}
 
-            x11,x12 = x1.split(':') 
-            x21,x22 = x2.split(':') 
-
-            num1 = int(x11) + int(x12)/60
-            num2 = int(x21) + int(x22)/60
-        else:
-            num1 = num2 =  0
-        return [num1, num2]
-    def desintervalo(x):
-        x = str(x)
-        x1,x2 = x.split('.')
-        return x1 + ':' + str(str(int(x2)*60) + str(0))[0:2]
-        
-    traslapes = {}
-    for dia, horario in a_dic.items():
-        intervalos = []
-        
-        for hora in horario.values():
-            intervalos.append(intervalo_maker(hora))
-        for intervalo1 in range(len(intervalos)):
-            for intervalo2 in range(intervalo1+1, len(intervalos)):
-                if intervalos[intervalo1][0] >= intervalos[intervalo2][0] and intervalos[intervalo1][0] < intervalos[intervalo2][1]:
-                    llave =  str(dia) + str(intervalos[intervalo2][0]) + str(intervalos[intervalo1][0])
-                    if llave not in traslapes: 
-                        traslapes[llave] = f"Hay traslapes los {dias_dic[dia]} de {desintervalo(intervalos[intervalo2][0])} - {desintervalo(intervalos[intervalo1][1])}"
+    llaves = dictionary.keys()
+    lista = []
+    traslapes = []
+    for llave in llaves:
+        for x in range(len(dictionary[llave])):
+            for y in range(len(dictionary[llave])):
+                bandera = 0
+                if x == y or  dictionary[llave][x]==[]or  dictionary[llave][y]==[]:
+                    pass
+                else:
+                    
+                    if dictionary[llave][x][0]>=dictionary[llave][y][0] and dictionary[llave][x][0]<dictionary[llave][y][0]:    
+                        bandera = 1
+                    elif dictionary[llave][x][1]>dictionary[llave][y][0]  and dictionary[llave][x][1]<=dictionary[llave][y][1]:
+                        bandera = 1
+                    if bandera == 1:
                         
-    return traslapes
+                        x0 = dictionary[llave][x][0]
+                        x1 = dictionary[llave][x][1]
+                        y0 = dictionary[llave][y][0]
+                        y1 = dictionary[llave][y][1]
+
+                        iniciox = str(int(x0)) + ':00' if x0%1==0 else str(int(x0)) +':'+str(int((x0%1)*60))
+                        inicioy = str(int(y0)) + ':00' if y0%1==0 else str(int(y0)) +':'+str(int((y0%1)*60))
+                        finalx = str(int(x1)) + ':00' if x1%1==0 else str(int(x1)) +':'+str(int((x1%1)*60))
+                        finaly = str(int(y1)) + ':00' if y1%1==0 else str(int(y1)) +':'+str(int((y1%1)*60))
+                        
+                        tsp =  f'Hay traslapes los {llave} con {materias[x]} de {iniciox + " - " + finalx} y {materias[y]} de {inicioy + " - " + finaly} '
+                        if set([materias[x], materias[y], llave]) not in traslapes: 
+                            traslapes.append(set([materias[x], materias[y], llave]))
+                            lista.append(tsp)
+                        
+    return lista
 
 @app.callback(Output('input-id','children'),[Input('ingresar-id','n_clicks'), Input('ingresar-id','children'), State('Materia_y_grupo','value'),State('text-id','value')], prevent_initial_call=True)
 def open_input(clicks, texto, materia, ide):
@@ -539,7 +564,9 @@ def generate_3table(materia_grupo,carrera, dataframe = df, max_rows = 100):
     #     dataframe = dataframe[(dataframe['Programa']==carrera) & (dataframe['Unidad de aprendizaje']==materia)]
 
     #     dataframe = dataframe.drop('Unnamed: 0',axis = 1).iloc[:,[0,1,3,5,6,7,8,9,10,16]]
-        diccionario_traslapes = traslape(dataframe.loc[:,['Lun', 'Mar','Mie', 'Jue', 'Vie']].to_dict())
+        dicc = dataframe.to_dict()
+        diccionario_traslapes = traslapesd(dicc, list(dicc['Asignatura'].values()))
+        #diccionario_traslapes = traslape(dataframe.loc[:,['Lun', 'Mar','Mie', 'Jue', 'Vie']].to_dict())
         if materia_grupo == []:
             dataframe = pd.DataFrame(columns = ["Grupo", 'Asignatura', 'Profesor', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Calificación', 'Correo'])
         return [[None 
@@ -552,7 +579,7 @@ def generate_3table(materia_grupo,carrera, dataframe = df, max_rows = 100):
             #         ], style = {'height':40}) for i in range(min(len(dataframe), max_rows))
             #     ], style = {'color':'#414242' })
 
-            ], [dbc.FormText( texto , style ={'text-align':'center','margin-bottom':1,'margin-top':1, 'font-size':"0.9rem", "color":"red"}) for texto in diccionario_traslapes.values()],   [dbc.Table.from_dataframe(dataframe,responsive = True, striped = True, hover = True)]]
+            ], [dbc.FormText( texto , style ={'text-align':'center','margin-bottom':1,'margin-top':1, 'font-size':"0.9rem", "color":"red"}) for texto in diccionario_traslapes],   [dbc.Table.from_dataframe(dataframe,responsive = True, striped = True, hover = True)]]
 
 if __name__ == '__main__':
     app.run_server(debug = True)
