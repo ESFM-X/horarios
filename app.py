@@ -17,7 +17,7 @@ cred = credentials.Certificate("./horario-f7ff5-firebase-adminsdk-xebih-c86b730d
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
-df  = pd.read_csv('2021-4.csv')
+df  = pd.read_csv('2022-1p.csv')
 app = dash.Dash(__name__, external_stylesheets = external_stylesheets,suppress_callback_exceptions=True)
 server = app.server
 first = [{'label': '-','value':'all'}]
@@ -47,7 +47,7 @@ app.layout = html.Div( children = [
     html.Header(
         children = [html.Img (src="https://fotos.subefotos.com/076df224d0bb0b75749aa140d0c955afo.png", 
                     style = {"margin-bottom":0,'min-width':350, "display":"block","width": '55%', "height": "auto", "margin-left": "auto", "margin-right": "auto", "margin-top": 1,"margin-bottom": 0,"text-align":"center", 'padding-top':30}),
-                    html.H2('Información de horarios ', style={'font-size':"2.2rem",'margin-bottom':0, 'margin-top':10}),html.P(children = 'Página no oficial del IPN', style = {'color':'#959595'}), html.Br()],
+                    html.H2('Información de horarios 2022-1', style={'font-size':"2.2rem",'margin-bottom':0, 'margin-top':10}),html.P(children = 'Página no oficial del IPN', style = {'color':'#959595'}), html.Br()],
         style= {
            # 'backgroundColor': '#79003E',#colors['text'],#colors['background'],
             'color': '#7b1448',#'#FFFFFF',#colors['text'],
@@ -68,12 +68,13 @@ app.layout = html.Div( children = [
     #         ''
     #         }
     # ),
-    html.P('ESFM ha estado modificando los horarios, revisa si hay algún cambio en el tuyo.', style = {
+    html.P('IMPORTANTE: Horarios no finales, por lo que es probable que cambien.', style = {
                                                                                        'margin-left':100,
                                                                                        'margin-right':'auto',
                                                                                        'width': "80%",
                                                                                         'margin-right':100,
-                                                                                        'font-size':'0.8rem'}
+                                                                                        'font-size':'1rem',
+                                                                                        'color':'red'}
           ),
     html.H3(children = 'Filtrar por grupo', style = style_subtitles),
   
@@ -291,7 +292,7 @@ app.layout = html.Div( children = [
     html.Div(id='cache', style={'display': 'none'}),
     html.Div(id='nothing', style={'display': 'none'}),
     html.Footer(children= [
-                                         html.Div(children = ['Hecho con ❤ por el CdP ESFM. '
+                                         html.Div(children = ['Hecho con ❤ por el ', html.A('CdP ESFM. ', href = "https://cdp.esfm-x.com")
                                                                  ], 
                                                 style = {
                                                     'textAlign': 'center',
@@ -343,7 +344,7 @@ def traslapesd(dfdic2, materias):
         traslape = []
         bandera=2
         for llave in llaves:
-            if dic[llave] != '\xa0':
+            if dic[llave] != '\xa0' and type(dic[llave]) != float:
                 inicio,final = dic[llave].split("-")
                 hinicio,hfinal = float(inicio.split(":")[0]),float(final.split(":")[0])
                 minicio,mfinal = float(inicio.split(":")[1])/60,float(final.split(":")[1])/60
@@ -568,7 +569,7 @@ def generate_3table(materia_grupo,carrera, dataframe = df, max_rows = 100):
         diccionario_traslapes = traslapesd(dicc, list(dicc['Asignatura'].values()))
         #diccionario_traslapes = traslape(dataframe.loc[:,['Lun', 'Mar','Mie', 'Jue', 'Vie']].to_dict())
         if materia_grupo == []:
-            dataframe = pd.DataFrame(columns = ["Grupo", 'Asignatura', 'Profesor', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Calificación', 'Correo'])
+            dataframe = pd.DataFrame(columns = ["Grupo", 'Asignatura', 'Profesor', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Calificación', 'Plataformas'])
         return [[None 
             # html.Thead(
             #         html.Tr([html.Th(col) for col in dataframe.columns])
