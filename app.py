@@ -47,7 +47,7 @@ app.layout = html.Div( children = [
     html.Header(
         children = [html.Img (src="https://fotos.subefotos.com/076df224d0bb0b75749aa140d0c955afo.png", 
                     style = {"margin-bottom":0,'min-width':350, "display":"block","width": '55%', "height": "auto", "margin-left": "auto", "margin-right": "auto", "margin-top": 1,"margin-bottom": 0,"text-align":"center", 'padding-top':30}),
-                    html.H2('Información de horarios 2022-1', style={'font-size':"2.2rem",'margin-bottom':0, 'margin-top':10}),html.P(children = 'Página no oficial del IPN', style = {'color':'#959595'}), html.Br()],
+                    html.H2('Información de horarios 2022-1', style={'font-size':"2.2rem",'margin-bottom':0, 'margin-top':10}),html.Br()],
         style= {
            # 'backgroundColor': '#79003E',#colors['text'],#colors['background'],
             'color': '#7b1448',#'#FFFFFF',#colors['text'],
