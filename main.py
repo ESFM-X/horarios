@@ -1,3 +1,4 @@
+from __future__ import print_function
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -11,14 +12,27 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 import random
 import time
+
+import os.path
+from googleapiclient.discovery import build
+from google.oauth2 import service_account
 external_stylesheets = [dbc.themes.BOOTSTRAP]
 
 cred = credentials.Certificate("./horario-f7ff5-firebase-adminsdk-xebih-c86b730d5a.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
+###############################################################################
+SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
+SERVICE_ACCOUNT_FILE = './keys.json'
 
-df  = pd.read_csv('2022-1p.csv')
-app = dash.Dash(__name__, external_stylesheets = external_stylesheets,suppress_callback_exceptions=True)
+credentials = None
+credentials = service_account.Credentials.from_service_account_file(
+        SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+SPREADSHEET_ID = '16_jhdhBcgBVSwtFpl_BGEHOwJObfEeO_wCs-Nqw3fSY'
+###############################################################################
+df  = pd.read_csv('2022-1f.csv')
+app = dash.Dash(__name__, external_stylesheets = external_stylesheets,suppress_callback_exceptions=True, 
+                update_title= None, meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=0.8"}])
 server = app.server
 first = [{'label': '-','value':'all'}]
 group_dict = [{'label': group,'value':group} for group in df['Grupo'].unique()]
@@ -33,24 +47,24 @@ colors = {
 style_subtitles= {
     'margin-left':"5%",
     'margin-right':'auto',
-    'width': 300
+    'width': '90%'
 
 }
 style_bar = {  
     'border-top-style': 'double',
-    'border-top-color': '#7b1448',#'#1866B9',
+    'border-top-color': '#f9aa3a',#'#1866B9',
     'width': '90%',
     'margin-left': 'auto',
     'margin-right': 'auto'
 }
 app.layout = html.Div( children = [
     html.Header(
-        children = [html.Img (src="https://fotos.subefotos.com/076df224d0bb0b75749aa140d0c955afo.png", 
-                    style = {"margin-bottom":0,'min-width':350, "display":"block","width": '55%', "height": "auto", "margin-left": "auto", "margin-right": "auto", "margin-top": 1,"margin-bottom": 0,"text-align":"center", 'padding-top':30}),
-                    html.H2('Información de horarios 2022-1', style={'font-size':"2.2rem",'margin-bottom':0, 'margin-top':10}),html.Br()],
+        children = [html.Img (src="https://i.ibb.co/dcJMCTP/Logotipo-Final-Negro.png", 
+                    style = {"margin-bottom":0, "display":"block","width": '70%', "height": "auto", "margin-left": "auto", "margin-right": "auto", "padding-top": 1,"margin-bottom": 0,"text-align":"center", 'padding-top':30}),
+                    html.H3('Información de horarios 2022-1', style={'margin-bottom':0, 'margin-top':10}),html.Br()],
         style= {
            # 'backgroundColor': '#79003E',#colors['text'],#colors['background'],
-            'color': '#7b1448',#'#FFFFFF',#colors['text'],
+            'color': '#f9aa3a',#'#FFFFFF',#colors['text'],
             'margin-top':0,
             'margin-bottom':0,
             'margin-left':'auto',
@@ -61,26 +75,18 @@ app.layout = html.Div( children = [
             #'width':730
         }
     ),
-    # html.Div(style= {
-    #         'backgroundColor': '#79003E',#colors['text'],#colors['background'],
-    #         'height':10,
-    #         'margin-left':30,
-    #         ''
-    #         }
-    # ),
-    html.P('IMPORTANTE: Horarios no finales, por lo que es probable que cambien.', style = {
-                                                                                       'margin-left':100,
-                                                                                       'margin-right':'auto',
+    
+    html.P('IMPORTANTE: La información se ha actualizado por los horarios oficiales', style = {
+                                                                                       'margin-left':'5%',
                                                                                        'width': "80%",
-                                                                                        'margin-right':100,
-                                                                                        'font-size':'1rem',
-                                                                                        'color':'red'}
+                                                                                        'font-size':'0.8rem',
+                                                                                        'color':'#3AF9AA'}
           ),
     html.H3(children = 'Filtrar por grupo', style = style_subtitles),
-  
+    
     html.Div('', style = style_bar),
-    html.Div(children = [
-        html.Div(
+    dbc.Row( [
+        dbc.Col(
             children = dcc.Dropdown(id = 'Carrera', options = [{'label':'Ingeniería Matemática',
                                                                 'value':'LIM'},
                                                                 {'label':'Física y Matemáticas',
@@ -90,34 +96,26 @@ app.layout = html.Div( children = [
                                                                 ],
                                                     value = 'LIM',
                                                     searchable = False,
-                                                    clearable = False),
-            style = {
-                'margin':40,
-                'width': "40%",
-                'margin-bottom':10,
-                'margin-top': 20,
-                'margin-right':10
-                
-            },
-            className = 'six columns'
+                                                    clearable = False,
+                                                    style = {'color':'black'}),
+            
+             width = 8,
+             md = 3
         
         ),
-        html.Div(
+        dbc.Col(
             children = dcc.Dropdown(id = 'Semestre', #options = group_dict,
                                                     value = '1MV2',
                                                     searchable = False,
                                                     clearable = False,
-                                                    placeholder = "Selecciona una opción"),
-            style = {
-                'margin':40,
-                'width': 150,
-                'margin-top':20,
-                'margin-bottom':20,
-                'margin-left':0
-            },
-            className = 'six columns'
+                                                    placeholder = "Selecciona una opción",
+                                                    style = {'color':'black'}),
+        
+            width = 4,
+            md = 2
+           
     
-    )],className = 'row', style = {'width': 500, 'margin-left':'auto', 'margin-right':'auto'}),
+    )],justify="center", style = {'width': '90%', 'margin-left':'auto', 'margin-right':'auto', 'margin-top':20}),
 
     html.Table(id = 'First_table',style = {
                                             'textAlign': 'center',
@@ -168,7 +166,8 @@ app.layout = html.Div( children = [
                                                 value = '1MV2',
                                                 #searchable = False,
                                                 clearable = False,
-                                                placeholder = "Selecciona una opción"),
+                                                placeholder = "Selecciona una opción",
+                                                    style = {'color':'black'}),
         style = {
             'margin':40,
             'width': "40%",
@@ -232,7 +231,8 @@ app.layout = html.Div( children = [
                                                     #searchable = False,
                                                     multi=True,
                                                     clearable = True,
-                                                    placeholder = "Selecciona una opción"),
+                                                    placeholder = "Selecciona una opción",
+                                                    style = {'color':'black'}),
             style = {
                 'margin':40,
                 'width': "60%",
@@ -248,7 +248,8 @@ app.layout = html.Div( children = [
         ),
         
     ], className = 'row', style = {'width': "100%", 'margin-left':'auto', 'margin-right':'auto'}),
-    html.Div(id = "traslapes", style = {'margin-bottom':10, 'padding-bottom':1}),
+    html.P(["Si tu asignatura no cuenta con grupo de WhatsApp créalo tú y publica su link en el ", html.A('Índice de grupos', target="_blank", href = 'https://docs.google.com/spreadsheets/d/16_jhdhBcgBVSwtFpl_BGEHOwJObfEeO_wCs-Nqw3fSY/edit?usp=sharing', style ={'color': '#F9AA3A'})], style ={'text-align':'center', 'margin-bottom':1, 'font-size':'1rem'}),
+    html.Div(id = "traslapes", style = {'margin-bottom':10, 'padding-bottom':1, 'color':'white'}),
     html.Table(id = 'third_table',style = {
                                             'textAlign': 'center',
                                             #'margin':80,
@@ -260,20 +261,21 @@ app.layout = html.Div( children = [
                                             'height':'auto'
                                            }
     ),
-    html.Div(id = 'table-prueba', style = {
-                                            'textAlign': 'center',
-                                            'margin':80,
-                                            'margin-top':10,
-                                            'margin-left':'auto',
-                                            'margin-right':'auto',
-                                            'margin-bottom':20,
-                                            'width': "90%",
-                                            'height':'auto',
-                                            'font-size': '0.8rem'
-                                           }),
-   
-    html.P("Organiza tu horario y después genera un ID.", style ={'text-align':'center', 'margin-bottom':1, 'font-size':'0.8rem'}),
-    html.P("Podrás recuperar tu horario y hacer cambios con el mismo ID.", style ={'text-align':'center', 'font-size':'0.8rem'}),
+    dbc.Spinner(
+        html.Div(id = 'table-prueba', style = {
+                                                'textAlign': 'center',
+                                                'margin':80,
+                                                'margin-top':10,
+                                                'margin-left':'auto',
+                                                'margin-right':'auto',
+                                                'margin-bottom':20,
+                                                'width': "90%",
+                                                'height':'auto',
+                                                'font-size': '0.8rem'
+                                            }),
+    ),
+    html.P("Organiza tu horario y después genera un ID", style ={'text-align':'center', 'margin-bottom':1, 'font-size':'0.8rem'}),
+    html.P("Podrás recuperar tu horario y hacer cambios con el mismo ID", style ={'text-align':'center', 'font-size':'0.8rem'}),
     
 
     #html.P("(Beta) El ID te permite recordar tu selección de horario.", style ={'text-align':'center'}),
@@ -283,8 +285,8 @@ app.layout = html.Div( children = [
     #dbc.FormText("El ID te permite recordar tu selección de horario.", style ={'text-align':'center'}),
     html.Div(children = [
         
-        dbc.Button("Ingresar ID", id = "ingresar-id",color="success", style = { 'margin-left':'auto', 'margin-right':0}, className = 'three columns'),
-        dbc.Button("Generar ID", id = "generar-id" ,color="primary", style = { 'margin-left':10, 'margin-right':'auto'}, className = 'three columns', disabled=True),
+        dbc.Button("Ingresar ID", id = "ingresar-id",color="warning", style = { 'margin-left':'auto', 'margin-right':0}, className = 'three columns'),
+        dbc.Button("Generar ID", id = "generar-id" ,color="danger", style = { 'margin-left':10, 'margin-right':'auto'}, className = 'three columns', disabled=True),
         ],
         style = {'width': "100%", 'margin-left':'auto', 'margin-right':'auto', 'margin-top':10},
         className = 'row'
@@ -292,7 +294,7 @@ app.layout = html.Div( children = [
     html.Div(id='cache', style={'display': 'none'}),
     html.Div(id='nothing', style={'display': 'none'}),
     html.Footer(children= [
-                                         html.Div(children = ['Hecho con ❤ por el ', html.A('CdP ESFM. ', href = "https://cdp.esfm-x.com")
+                                         html.Div(children = ['Hecho con ❤ por el ', html.A('CdP ESFM. ', href = "https://cdp.esfm-x.com", style ={'color': '#F9AA3A'})
                                                                  ], 
                                                 style = {
                                                     'textAlign': 'center',
@@ -301,15 +303,16 @@ app.layout = html.Div( children = [
                                                     'margin-right': 'auto'
                                                  }
                                          ),
-                                         html.Div(children= ['Datos obtenidos de ', html.A('Mis Profesores',href = 'https://www.misprofesores.com/escuelas/ESFM-IPN_1691'),
+                                         html.Div(children= ['Datos obtenidos de ', html.A('Mis Profesores',href = 'https://www.misprofesores.com/escuelas/ESFM-IPN_1691', style ={'color': '#F9AA3A'}),
                                                                                             ' y ', 
-                                                                                            html.A('ESFM',href = 'https://www.esfm.ipn.mx'),
+                                                                                            html.A('ESFM',href = 'https://www.esfm.ipn.mx/assets/files/esfm/docs/HORARIOS.pdf', style ={'color': '#F9AA3A'}),
                                                                                             '. '],
                                                   style = {
                                                     'textAlign': 'center',
                                                     'margin': 10,
                                                     'margin-left': 'auto',
-                                                    'margin-right': 'auto'
+                                                    'margin-right': 'auto',
+                                                    'margin-bottom':0
                                                  }
                                          
                                          )
@@ -329,8 +332,32 @@ app.layout = html.Div( children = [
 
    
 
-],style={'margin-top':0}
+],style={'margin-top':0, 'background-color':'#343a40', 'color':'white'}
 )
+def get_groups_wa(carrera, grupo, asignatura):
+    
+    if carrera == 'LIM':
+        RANGE_NAME = 'LIM!A4:D118'
+    elif carrera == 'LFM':
+        RANGE_NAME = 'LFM!A4:D176'
+    else:
+        RANGE_NAME = 'LMA!A4:D27'
+
+    service = build('sheets', 'v4', credentials=credentials)
+    sheet = service.spreadsheets()
+    result = sheet.values().get(spreadsheetId=SPREADSHEET_ID,
+                                    range=RANGE_NAME).execute()
+    values = result.get('values', []) 
+    if not values:
+        return None
+    else:
+        for row in values:
+            
+            if row[0] == grupo and row[1] == asignatura:
+                return row
+            if int(row[0][0]) > int(grupo[0]):
+                return None
+        return None
 
 def traslapesd(dfdic2, materias):
     def limpiador(dic):
@@ -344,8 +371,13 @@ def traslapesd(dfdic2, materias):
         traslape = []
         bandera=2
         for llave in llaves:
-            if dic[llave] != '\xa0' and type(dic[llave]) != float:
-                inicio,final = dic[llave].split("-")
+            if dic[llave] != '\xa0' and type(dic[llave]) != float and dic[llave] != '\n':
+                print(dic[llave].replace('\n', ''), llave)
+                if '-' in dic[llave]:
+                    inicio,final = dic[llave].replace('.', ':').split("-")
+                else:
+                    #print('entraste')
+                    inicio, final = dic[llave].replace('.', ':').split("\n")
                 hinicio,hfinal = float(inicio.split(":")[0]),float(final.split(":")[0])
                 minicio,mfinal = float(inicio.split(":")[1])/60,float(final.split(":")[1])/60
                 horasini.append([hinicio+minicio,hfinal+mfinal])
@@ -518,7 +550,9 @@ def generate_table(semestre,carrera, dataframe = df, max_rows = 100):
             #             html.Td(dataframe.iloc[i][col]) for col in dataframe.columns
             #         ], style = {'height':40}) for i in range(min(len(dataframe), max_rows))
             #     ], style = {'color':'#414242' , 'width': 200})
-            [dbc.Table.from_dataframe(dataframe,responsive = True, striped = True, hover = True)]
+            [dbc.Table.from_dataframe(dataframe,responsive = True, striped = True, 
+                                        hover = True, #bordered = True,
+                                        borderless = True, dark = True)]
             ]
 
 @app.callback([Output('second_table','children'), Output('second_table2', 'children')],[Input('Materia','value'),Input('Carrera','value')])
@@ -537,26 +571,39 @@ def generate_2table(materia,carrera, dataframe = df, max_rows = 100):
             #         ], style = {'height':40}) for i in range(min(len(dataframe), max_rows))
             #     ], style = {'color':'#414242' })
 
-            ], [dbc.Table.from_dataframe(dataframe,responsive = True, striped = True, hover = True)] ]
+            ], [dbc.Table.from_dataframe(dataframe,responsive = True, striped = True, hover = True, #bordered = True,
+                                        borderless = True, dark = True)] ]
 
 @app.callback([Output('third_table','children'),Output('traslapes','children'), Output('table-prueba', 'children')],[Input('Materia_y_grupo','value'),Input('Carrera','value')])
 def generate_3table(materia_grupo,carrera, dataframe = df, max_rows = 100):
     
     dataframe = df[dataframe["Programa"] == carrera]
     new_df = pd.DataFrame()
+    grupo_wa = []
+    flag = 0
     for materia_g in materia_grupo:
         materia = materia_g.split('*')[0]
         try:
             grupo = materia_g.split('*')[1]
         except:
             grupo = ''
-
+        
+        row = get_groups_wa(carrera, grupo, materia)
+        if row:
+            if len(row) == 4:
+                flag = 1
+                grupo_wa.append(html.A(f'{row[3][:30]}...', href = row[3]))
+            else:
+                grupo_wa.append('')
+                
         new_df = pd.concat([  new_df, df[(df["Programa"] == carrera) &  (df['Asignatura']== materia) & (df['Grupo']== grupo)]  ])
-    
+    if flag: 
+        
+        new_df['Grupo WA'] = grupo_wa
     dataframe = new_df
     
     try:
-        dataframe = dataframe.iloc[:,loc_list]
+        dataframe = dataframe.iloc[:,loc_list + ([-1] if flag else [])]
     except:
         dataframe = df[df['Asignatura'] == '']
     
@@ -570,6 +617,8 @@ def generate_3table(materia_grupo,carrera, dataframe = df, max_rows = 100):
         #diccionario_traslapes = traslape(dataframe.loc[:,['Lun', 'Mar','Mie', 'Jue', 'Vie']].to_dict())
         if materia_grupo == []:
             dataframe = pd.DataFrame(columns = ["Grupo", 'Asignatura', 'Profesor', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Calificación', 'Plataformas'])
+        
+
         return [[None 
             # html.Thead(
             #         html.Tr([html.Th(col) for col in dataframe.columns])
@@ -580,7 +629,7 @@ def generate_3table(materia_grupo,carrera, dataframe = df, max_rows = 100):
             #         ], style = {'height':40}) for i in range(min(len(dataframe), max_rows))
             #     ], style = {'color':'#414242' })
 
-            ], [dbc.FormText( texto , style ={'text-align':'center','margin-bottom':1,'margin-top':1, 'font-size':"0.9rem", "color":"red"}) for texto in diccionario_traslapes],   [dbc.Table.from_dataframe(dataframe,responsive = True, striped = True, hover = True)]]
+            ], [html.P( texto , style ={'text-align':'center','margin-bottom':1,'margin-top':1, 'font-size':"0.9rem", "color":"red"}) for texto in diccionario_traslapes],   [dbc.Table.from_dataframe(dataframe,responsive = True, striped = True, hover = True, borderless = True, dark = True)]]
 
 if __name__ == '__main__':
     app.run_server(debug = True)

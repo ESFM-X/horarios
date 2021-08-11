@@ -1,0 +1,7 @@
+
+private/
+__pycache__/
+
+venv/
+venvlinux/
+.vscode/
